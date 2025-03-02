@@ -16,4 +16,13 @@ public class MahasiswaController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @GetMapping("/")
+    public String index(Model model) {
+        String sql = "SELECT * FROM mahasiswa";
+        List<Mahasiswa> mahasiswa = jdbcTemplate.query(sql,
+                BeanPropertyRowMapper.newInstance(Mahasiswa.class));
+        model.addAttribute("mahasiswa", mahasiswa);
+        return "index";
+    }
 }
