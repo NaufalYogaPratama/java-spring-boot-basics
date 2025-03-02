@@ -25,4 +25,16 @@ public class MahasiswaController {
         model.addAttribute("mahasiswa", mahasiswa);
         return "index";
     }
+    @GetMapping("/add")
+    public String add(Model model) {
+        return "add";
+    }
+
+    @PostMapping("/add")
+    public String add(Mahasiswa mahasiswa) {
+        String sql = "INSERT INTO mahasiswa VALUES(?,?,?,?)";
+        jdbcTemplate.update(sql, mahasiswa.getNim(),
+                mahasiswa.getNama(), mahasiswa.getAngkatan(), mahasiswa.getGender());
+        return "redirect:/";
+    }
 }
