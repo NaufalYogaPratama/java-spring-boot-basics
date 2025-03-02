@@ -13,7 +13,6 @@ import com.example.model.Mahasiswa;
 
 @Controller
 public class MahasiswaController {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -35,6 +34,21 @@ public class MahasiswaController {
         String sql = "INSERT INTO mahasiswa VALUES(?,?,?,?)";
         jdbcTemplate.update(sql, mahasiswa.getNim(),
                 mahasiswa.getNama(), mahasiswa.getAngkatan(), mahasiswa.getGender());
+        return "redirect:/";
+    }
+    @GetMapping("/edit/{nim}")
+    public String edit(@PathVariable("nim") String nim, Model model) {
+        String sql = "SELECT * FROM mahasiswa WHERE nim = ?";
+        Mahasiswa mahasiswa = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(Mahasiswa.class), nim);
+        model.addAttribute("mahasiswa", mahasiswa);
+        return "edit";
+    }
+
+    @PostMapping("/edit")
+    public String edit(Mahasiswa mahasiswa) {
+        String sql = "UPDATE mahasiswa SET nama = ?, angkatan = ?, gender = ? WHERE nim = ?";
+        jdbcTemplate.update(sql, mahasiswa.getNama(), mahasiswa.getAngkatan(), mahasiswa.getGender(),
+                mahasiswa.getNim());
         return "redirect:/";
     }
 }
